@@ -42,8 +42,20 @@
                 </ul>
                 <div>
                     <input type ="text" ng-model="searchFilter" placeholder="Search for Movies in List"><br>
-                    Sort by: <button ng-click="sortBy('Title')">Title</button><button ng-click="sortBy('-Ratings[0].Value')">IMDB Rating</button>
-                    Add a movie:<input type="text" typeahead-on-select="addMovieToList(movieViewSearch)" ng-model="movieViewSearch" onclick="select()" placeholder="Enter Movie Name" uib-typeahead="result as result.suggest for result in getSuggest($viewValue)" typeahead-min-length="3" autofocus>
+                    Sort by: <!--<button >Title</button><button ng-click="sortBy('-Ratings[0].Value')">IMDB Rating</button>-->
+                  <select 
+                        
+                        ng-model="selected_id" 
+                        ng-init="selected_id = options[0]"
+                        ng-change="sortBy(selected_id)">
+                        <option ng-option="Title" value="Title">Title</option>
+                        <option ng-option="-Ratings[0].Value" value="-Ratings[0].Value">IMDB Rating</option>
+                  </select>
+
+
+
+
+                    Add a movie:<input type="text" typeahead-on-select="addMovieToList()" ng-model="movieViewSearch" onclick="select()" placeholder="Enter Movie Name" uib-typeahead="result as result.suggest for result in getSuggest($viewValue)" typeahead-min-length="3" autofocus>
                     List Name: {{selectedList.listName}}<br>
                     Movies In List: {{selectedList.moviesForList.length}}
                     Average Rating: {{averageRating}}

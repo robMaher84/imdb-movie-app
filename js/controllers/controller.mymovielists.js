@@ -10,7 +10,7 @@ angular
     $scope.averageRating = 0;
     $scope.searchedForMovie = [];
     $scope.addMovieToList = function (target) {
-      $http.get("https://www.omdbapi.com/?t=" + target.suggest + "&plot=full")
+      $http.get("https://www.omdbapi.com/?t=" + $scope.movieViewSearch.suggest + "&plot=full")
         .then(function (response) {
           if (response.data.Title != "Undefined" && !$scope.containsMovieTitle(response.data.Title, $scope.moviesInSelectedList)) {
             response.data["MyUserRating"] = myListsService.getMovieRating(response.data.Title);
@@ -20,7 +20,7 @@ angular
             myListsService.addMovieToList(response.data, $scope.selectedList.listName);
             myListsService.saveList();
           } else { alert("That movie is already in your list") }
-          $scope.async = "";
+          $scope.movieViewSearch = "";
         });
     }
    
