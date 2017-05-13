@@ -113,18 +113,23 @@ angular
                 if ($scope.selectedList.listName == listName)
                 { $scope.moviesInSelectedList.push($scope.searchedForMovie); }
                 myListsService.addMovieToList($scope.searchedForMovie, listName);
+                alert("Movie added to " + listName);
               }
             }
             else if (keepGoing && listName == baseList.listName) {
               keepGoing = false;
+              alert("That movie is already in " + baseList.listName);
             }
           });
         });
       }
       else {
-        alert("Select a movie to add first!")
+        if($scope.listsToAddMovieTo.length > 0)
+        alert("Select a movie to add first!");
+        else
+        alert("Select some lists");
       }
-      $scope.selectedLists = [];
+      $scope.selectedMultiLists = [];
       $scope.listsToAddMovieTo = [];
     }
 
