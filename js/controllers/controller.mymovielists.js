@@ -9,15 +9,13 @@ angular
     $scope.sortingOption = "Title";
     $scope.averageRating = 0;
     $scope.searchedForMovie = [];
-
-    $scope.addMovieToList = function () {
-      $http.get("https://www.omdbapi.com/?t=" + $scope.async.suggest + "&plot=full")
+    $scope.addMovieToList = function (target) {
+      $http.get("https://www.omdbapi.com/?t=" + target.suggest + "&plot=full")
         .then(function (response) {
           if (response.data.Title != "Undefined" && !$scope.containsMovieTitle(response.data.Title, $scope.moviesInSelectedList)) {
             response.data["MyUserRating"] = myListsService.getMovieRating(response.data.Title);
             if (response.data.Poster == "N/A")
               response.data.Poster = "images/na.png";
-
             $scope.moviesInSelectedList.push(response.data);
             myListsService.addMovieToList(response.data, $scope.selectedList.listName);
             myListsService.saveList();
@@ -25,7 +23,7 @@ angular
           $scope.async = "";
         });
     }
-
+   
     $scope.removeMovieFromList = function (movieName) {
       angular.forEach($scope.selectedList.moviesForList, function (movieObj, key) {
         if (movieObj.Title == movieName) {
@@ -87,9 +85,9 @@ angular
         .then(function (response) {
           if (response.data.Title != "Undefined") {
             response.data["MyUserRating"] = myListsService.getMovieRating(response.data.Title);
+            $scope.searchedForMovie = response.data;
             if (response.data.Poster == "N/A")
               response.data.Poster = "images/na.png";
-            $scope.searchedForMovie = response.data;
           } else { alert("Enter a valid movie title") }
           $scope.movieSearch = "";
         });
@@ -104,31 +102,36 @@ angular
     }
 
     $scope.addMovieToLists = function () {
-      if ($scope.listsToAddMovieTo.length > 0) {
-        angular.forEach($scope.listsToAddMovieTo, function (listName) {
-          var keepGoing = true;
-          angular.forEach($scope.myMoviesLists, function (baseList) {
-            if (keepGoing && listName == baseList.listName && !$scope.containsMovieTitle($scope.searchedForMovie.Title, baseList.moviesForList)) {
-              if ($scope.selectedList != undefined && $scope.selectedList.listName) {
-                if ($scope.selectedList.listName == listName)
-                { $scope.moviesInSelectedList.push($scope.searchedForMovie); }
+      if($scope.searchedForMovie.length != 0 && $scope.searchedForMovie != undefined)
+      {
+        if ($scope.listsToAddMovieTo.length > 0) 
+        {
+          angular.forEach($scope.listsToAddMovieTo, function (listName) 
+          {
+            var keepGoing = true;
+            angular.forEach($scope.myMoviesLists, function (baseList) {
+              if (keepGoing && listName == baseList.listName && !$scope.containsMovieTitle($scope.searchedForMovie.Title, baseList.moviesForList)) 
+              {
+                if ($scope.selectedList != undefined ) 
+                {
+                  if ($scope.selectedList.listName == listName)
+                  { 
+                    $scope.moviesInSelectedList.push($scope.searchedForMovie); 
+                  }
+                }
                 myListsService.addMovieToList($scope.searchedForMovie, listName);
                 alert("Movie added to " + listName);
               }
-            }
-            else if (keepGoing && listName == baseList.listName) {
-              keepGoing = false;
-              alert("That movie is already in " + baseList.listName);
-            }
+              else if (keepGoing && listName == baseList.listName) 
+              {
+                keepGoing = false;
+                alert("That movie is already in " + baseList.listName);
+              }
+            });
           });
-        });
-      }
-      else {
-        if($scope.listsToAddMovieTo.length > 0)
-        alert("Select a movie to add first!");
-        else
-        alert("Select some lists");
-      }
+        }else{alert("Select some lists")}
+      }else{alert("Search for a movie")}
+      
       $scope.selectedMultiLists = [];
       $scope.listsToAddMovieTo = [];
     }

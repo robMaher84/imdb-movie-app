@@ -38,7 +38,6 @@ angular
 
 		myListFactory.removeMovieFromList = function (listName, movieIndex) {
 			angular.forEach(myListFactory.myLists, function (list) {
-				console.log(list);
 				if (list.listName == listName) {
 					list.moviesForList.splice(movieIndex, 1);
 					myListFactory.saveList();

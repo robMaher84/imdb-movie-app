@@ -10,7 +10,6 @@ angular
           if (response.data.Title != "Undefined" && !$scope.containsMovieTitle(response.data.Title, $scope.movieList)) {
             response.data["MyUserRating"] = myListsService.getMovieRating(response.data.Title);
             $scope.movieList.push(response.data);
-            console.log($scope.movieList);
           } else { alert("That movie is already in your list") }
           $scope.async = "";
         });
